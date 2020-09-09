@@ -60,6 +60,7 @@ export function UserView(props) {
       // setQuestion(userView.questions);
     }
   }, [props]);
+  console.log(user);
   return (
     <div>
       <Header user={user} />
@@ -91,7 +92,7 @@ export function UserView(props) {
             }}
           />
         )}
-        {tab === 1 && <Question questions={question} />}
+        {tab === 1 && <Question user={user} />}
       </div>
     </div>
   );

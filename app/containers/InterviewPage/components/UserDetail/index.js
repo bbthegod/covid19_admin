@@ -16,8 +16,10 @@ import Avatar from '@material-ui/core/Avatar';
 import PersonIcon from '@material-ui/icons/Person';
 import ClassIcon from '@material-ui/icons/Class';
 import PhoneIcon from '@material-ui/icons/Phone';
+import Grid from '@material-ui/core/Grid';
 import CodeIcon from '@material-ui/icons/Code';
 import Divider from '@material-ui/core/Divider';
+import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -35,6 +37,8 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 export function InterviewPage({
+  comment,
+  setComment,
   usersDetail,
   score,
   setScore,
@@ -95,29 +99,36 @@ export function InterviewPage({
         <ListItemText primary={usersDetail.userID.email} secondary="Email" />
       </ListItem>
       <div className={classes.scoreBox}>
-        <TextField
-          label="Tổng Điểm"
-          style={{ marginLeft: 10 }}
-          variant="outlined"
-          type="number"
-          value={score}
-          onChange={e => setScore(e.target.value)}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                {usersDetail.totalScore} +{' '}
-              </InputAdornment>
-            ),
-          }}
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ margin: '0 20px' }}
-          onClick={handleSubmit}
-        >
-          Gửi đi
-        </Button>
+        <Grid container md={12}>
+          <Grid item md={12}>
+            <TextField
+              label="Tổng Điểm"
+              variant="outlined"
+              type="number"
+              value={score}
+              onChange={e => setScore(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    {usersDetail.totalScore} +{' '}
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Grid>
+          <Grid item md={12} style={{ margin: '20px 0' }}>
+            <TextareaAutosize
+              value={comment}
+              style={{ width: '100%', height: '200px' }}
+              onChange={e => setComment(e.target.value)}
+            />
+          </Grid>
+          <Grid item md={12}>
+            <Button variant="contained" color="primary" onClick={handleSubmit}>
+              Gửi đi
+            </Button>
+          </Grid>
+        </Grid>
       </div>
     </List>
   ) : null;
@@ -128,6 +139,8 @@ InterviewPage.propTypes = {
   usersDetail: PropTypes.object.isRequired,
   score: PropTypes.number.isRequired,
   setScore: PropTypes.func.isRequired,
+  comment: PropTypes.number.isRequired,
+  setComment: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
 };
 export default InterviewPage;

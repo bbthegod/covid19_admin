@@ -64,11 +64,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Question = props => {
-  const { className, ...rest } = props;
+  const { className, user, ...rest } = props;
   const classes = useStyles();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-
+  console.log(user.name);
   const handleChangePage = (event, page) => {
     setPage(page);
   };
@@ -79,18 +79,24 @@ const Question = props => {
 
   return (
     <>
-      {props.questions ? (
+      {props.user ? (
         <>
           <Card className={classes.info}>
             <Grid alignItems="center" container justify="space-between">
               <Grid className={classes.item} item md={3} sm={6} xs={12}>
                 <Typography component="h2" gutterBottom variant="overline">
+                  Tên Sinh Viên
+                </Typography>
+                <div className={classes.valueContainer}>
+                  <Typography variant="h3">{user.name}</Typography>
+                </div>
+              </Grid>
+              <Grid className={classes.item} item md={3} sm={6} xs={12}>
+                <Typography component="h2" gutterBottom variant="overline">
                   Mã Sinh Viên
                 </Typography>
                 <div className={classes.valueContainer}>
-                  <Typography variant="h3">
-                    {props.questions.userID.studentCode}
-                  </Typography>
+                  <Typography variant="h3">{user.studentId}</Typography>
                 </div>
               </Grid>
               <Grid className={classes.item} item md={3} sm={6} xs={12}>
@@ -99,17 +105,7 @@ const Question = props => {
                 </Typography>
                 <div className={classes.valueContainer}>
                   <Typography variant="h3">
-                    {props.questions.totalScore}
-                  </Typography>
-                </div>
-              </Grid>
-              <Grid className={classes.item} item md={3} sm={6} xs={12}>
-                <Typography component="h2" gutterBottom variant="overline">
-                  Thời gian kết thúc
-                </Typography>
-                <div className={classes.valueContainer}>
-                  <Typography variant="h3">
-                    {moment(props.questions.timeOut).format('L, LTS')}
+                    {user.playId.totalScore + user.playId.interviewScore}
                   </Typography>
                 </div>
               </Grid>
@@ -119,7 +115,7 @@ const Question = props => {
                 </Typography>
                 <div className={classes.valueContainer}>
                   <Typography variant="h3">
-                    {props.questions.isInterviewed ? 'True' : 'False'}
+                    {props.user.playId.isInterviewed ? 'True' : 'False'}
                   </Typography>
                 </div>
               </Grid>
@@ -133,20 +129,20 @@ const Question = props => {
                 <Table>
                   <TableHead className={classes.tableHeader}>
                     <TableRow>
-                      <TableCell align="center">Câu Trả Lời</TableCell>
+                      <TableCell align="center">Câu Hỏi</TableCell>
+                      <TableCell align="center">Câu Trả lời</TableCell>
                       <TableCell align="center">Đã Trả Lời</TableCell>
-                      <TableCell align="center">Số Thứ Tự</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {props.questions.questions.map(question => (
+                    {props.user.playId.history.questions.map(question => (
                       <TableRow hover>
+                        <TableCell align="center">
+                          {question.questionId.content}
+                        </TableCell>
                         <TableCell align="center">{question.answer}</TableCell>
                         <TableCell align="center">
                           {question.answered ? 'True' : 'False'}
-                        </TableCell>
-                        <TableCell align="center">
-                          {question.numbering}
                         </TableCell>
                       </TableRow>
                     ))}

@@ -23,6 +23,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CachedIcon from '@material-ui/icons/Cached';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
+import { Button } from '@material-ui/core';
 import saga from './saga';
 import reducer from './reducer';
 import makeSelectInterviewPage from './selectors';
@@ -30,7 +31,6 @@ import PaperList from './components/PaperList';
 import UserDetail from './components/UserDetail';
 
 import { getUser, interview, call } from './actions';
-import { Button } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -52,8 +52,17 @@ export function InterviewPage(props) {
   const [users, setUser] = useState();
   const [usersDetail, setUserDetail] = useState();
   const [score, setScore] = useState();
+  const [comment, setComment] = useState('');
   useEffect(() => {
     props.onGetUser();
+  }, []);
+  useEffect(() => {
+    if (!localStorage.getItem('interviewer')) {
+      const name = prompt('Nhập tên người phỏng vấn');
+      if (name != null) {
+        localStorage.setItem('interviewer', name);
+      }
+    }
   }, []);
   useEffect(() => {
     if (interviewPage && interviewPage.users) {
@@ -73,8 +82,16 @@ export function InterviewPage(props) {
   }
   function handleSubmit() {
     if (usersDetail) {
-      props.onInterview({ ...usersDetail, totalScore: score });
-      props.onGetUser();
+      if (localStorage.getItem('interviewer')) {
+        props.onInterview({
+          ...usersDetail,
+          interviewScore: +score,
+          comment,
+          interviewer: localStorage.getItem('interviewer'),
+        });
+        props.onGetUser();
+      }
+      setUserDetail(null);
     } else {
       alert('Chọn một sinh viên !');
     }
@@ -126,6 +143,8 @@ export function InterviewPage(props) {
           </div>
           <Divider variant="middle" />
           <UserDetail
+            comment={comment}
+            setComment={setComment}
             score={score}
             setScore={setScore}
             usersDetail={usersDetail}
