@@ -13,6 +13,8 @@ import {
   Typography,
   Button,
   colors,
+  TextField,
+  MenuItem,
 } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
@@ -53,48 +55,73 @@ const useStyles = makeStyles(theme => ({
 const DialogUser = props => {
   const {
     open,
-    onClose,
-    student,
+    setOpen,
+    row,
     staticContext,
     className,
     isEdit,
-    handleEdit,
+    onEdit,
+    onCreate,
     ...rest
   } = props;
-  const [studentCode, setStudentCode] = useState('');
-  const [studentName, setStudentName] = useState('');
-  const [studentClass, setStudentClass] = useState('');
-  const [studentPhone, setStudentPhone] = useState('');
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [classS, setClassS] = useState('');
+  const [studentId, setStudentId] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [role, setRole] = useState('');
   const classes = useStyles();
   useEffect(() => {
     clearData();
-    if (student) {
-      setStudentCode(student.studentCode);
-      setStudentName(student.studentName);
-      setStudentClass(student.studentClass);
-      setStudentPhone(student.studentPhone);
+    if (row) {
+      setName(row.name);
+      setPhone(row.phone);
+      setClassS(row.class);
+      setStudentId(row.studentId);
+      setEmail(row.email);
+      setPassword(row.password);
+      setRole(row.role);
     }
   }, [props]);
   function clearData() {
-    setStudentCode('');
-    setStudentName('');
-    setStudentClass('');
-    setStudentPhone('');
+    setName();
+    setPhone();
+    setClassS();
+    setStudentId();
+    setEmail();
+    setPassword();
+    setRole('user');
   }
 
   function onSubmit() {
-    handleEdit({
-      ...student,
-      ...{ studentCode },
-      ...{ studentName },
-      ...{ studentClass },
-      ...{ studentPhone },
-    });
-    onClose();
+    if (isEdit) {
+      onEdit({
+        ...row,
+        ...{ name },
+        ...{ phone },
+        ...{ className: classS },
+        ...{ studentId },
+        ...{ email },
+        ...{ password },
+        ...{ role },
+      });
+    } else {
+      onCreate({
+        ...{ name },
+        ...{ phone },
+        ...{ className: classS },
+        ...{ studentId },
+        ...{ email },
+        ...{ password },
+        ...{ role },
+      });
+    }
+    setOpen(false);
     props.history.push('/user');
   }
   return (
-    <Modal onClose={onClose} open={open}>
+    <Modal onClose={() => setOpen(false)} open={open}>
       <Card {...rest} className={clsx(classes.root, className)}>
         <CardContent>
           <Typography align="center" gutterBottom variant="h3">
@@ -104,67 +131,107 @@ const DialogUser = props => {
             <Grid className={classes.container} container spacing={3}>
               <Grid item md={6} xs={12}>
                 <TextValidator
-                  label="Student Code"
+                  label="Tên"
                   variant="outlined"
                   fullWidth
                   validators={['required']}
-                  value={studentCode}
-                  validators={['required', 'matchRegexp:[0-9]{10}']}
-                  errorMessages={[
-                    'This field is required',
-                    'Student code is not valid, exam: 2017604482',
-                  ]}
+                  value={name}
+                  errorMessages={['This field is required']}
                   onChange={e => {
-                    setStudentCode(e.target.value);
+                    setName(e.target.value);
                   }}
                 />
               </Grid>
               <Grid item md={6} xs={12}>
                 <TextValidator
-                  label="Student Name"
+                  label="Số Điện Thoại"
                   variant="outlined"
                   fullWidth
                   validators={['required']}
                   errorMessages={['This field is required']}
-                  value={studentName}
+                  value={phone}
                   onChange={e => {
-                    setStudentName(e.target.value);
+                    setPhone(e.target.value);
                   }}
                 />
               </Grid>
               <Grid item md={6} xs={12}>
                 <TextValidator
-                  label="Student Class"
+                  label="Lớp"
                   variant="outlined"
                   fullWidth
-                  validators={[
-                    'required',
-                    'matchRegexp:[A-Z]{4}[0-9]-[K][1][0-9]',
-                  ]}
-                  errorMessages={[
-                    'This field is required',
-                    'Class is not valid, exam: HTTT1-K12',
-                  ]}
-                  value={studentClass}
+                  validators={['required']}
+                  errorMessages={['This field is required']}
+                  value={classS}
                   onChange={e => {
-                    setStudentClass(e.target.value);
+                    setClassS(e.target.value);
                   }}
                 />
               </Grid>
               <Grid item md={6} xs={12}>
                 <TextValidator
-                  label="Student Phone"
+                  label="Mã Sinh Viên"
                   variant="outlined"
                   fullWidth
-                  label="Phone Number"
-                  validators={['required', 'matchRegexp:[0-9]{10}']}
-                  errorMessages={[
-                    'This field is required',
-                    'Phone number is not valid',
-                  ]}
-                  value={studentPhone}
+                  validators={['required']}
+                  errorMessages={['This field is required']}
+                  value={studentId}
                   onChange={e => {
-                    setStudentPhone(e.target.value);
+                    setStudentId(e.target.value);
+                  }}
+                />
+              </Grid>
+              <Grid item md={6} xs={12}>
+                <TextValidator
+                  label="Mã Sinh Viên"
+                  variant="outlined"
+                  fullWidth
+                  validators={['required']}
+                  errorMessages={['This field is required']}
+                  value={email}
+                  onChange={e => {
+                    setEmail(e.target.value);
+                  }}
+                />
+              </Grid>
+              <Grid item md={6} xs={12}>
+                <TextValidator
+                  label="Mật Khẩu"
+                  variant="outlined"
+                  fullWidth
+                  validators={['required']}
+                  errorMessages={['This field is required']}
+                  value={password}
+                  onChange={e => {
+                    setPassword(e.target.value);
+                  }}
+                />
+              </Grid>
+              <Grid item md={6} xs={12}>
+                <TextField
+                  select
+                  variant="outlined"
+                  style={{ width: '100%' }}
+                  label="Vị Trí"
+                  value={role}
+                  onChange={e => setRole(e.target.value)}
+                >
+                  <MenuItem value="user">user</MenuItem>
+                  <MenuItem value="admin">admin</MenuItem>
+                  <MenuItem value="judge">judge</MenuItem>
+                  <MenuItem value="receptionist">receptionist</MenuItem>
+                </TextField>
+              </Grid>
+              <Grid item md={6} xs={12}>
+                <TextValidator
+                  label="Email"
+                  variant="outlined"
+                  fullWidth
+                  validators={['required']}
+                  errorMessages={['This field is required']}
+                  value={email}
+                  onChange={e => {
+                    setEmail(e.target.value);
                   }}
                 />
               </Grid>
@@ -173,7 +240,7 @@ const DialogUser = props => {
         </CardContent>
         <CardActions className={classes.actions}>
           <Button
-            onClick={onClose}
+            onClick={() => setOpen(false)}
             variant="contained"
             className={classes.closeButton}
           >
@@ -181,7 +248,6 @@ const DialogUser = props => {
           </Button>
           <Button
             className={classes.saveButton}
-            onClick={onClose}
             variant="contained"
             onClick={() => onSubmit()}
           >

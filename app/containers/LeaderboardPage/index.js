@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /**
  *
  * LeaderboardPage
@@ -19,22 +20,22 @@ import saga from './saga';
 import Header from './components/Header';
 import DataTable from './components/DataTable';
 import { getPlay } from './actions';
+import _ from 'lodash';
 
 export function LeaderboardPage(props) {
   const { onGetPlay, leaderboardPage } = props;
   const [page, setPage] = useState(0);
   const [count, setCount] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(25);
+  const [rowsPerPage, setRowsPerPage] = useState(100);
   const [rows, setRows] = useState();
   const [order, setOrder] = useState(true);
   useInjectReducer({ key: 'leaderboardPage', reducer });
   useInjectSaga({ key: 'leaderboardPage', saga });
-  //===========================================================================
+  //= ==========================================================================
   useEffect(() => {
     onGetPlay({
       limit: rowsPerPage,
       skip: page * rowsPerPage,
-      sort: order ? '-totalScore' : 'totalScore',
     });
   }, [rowsPerPage, page, order]);
   useEffect(() => {
@@ -42,7 +43,6 @@ export function LeaderboardPage(props) {
       onGetPlay({
         limit: rowsPerPage,
         skip: page * rowsPerPage,
-        sort: order ? '-totalScore' : 'totalScore',
       });
     }, 10000);
     return () => clearInterval(interval);
@@ -51,11 +51,18 @@ export function LeaderboardPage(props) {
     if (leaderboardPage) {
       if (leaderboardPage.plays) {
         setCount(leaderboardPage.plays.count);
-        setRows(leaderboardPage.plays.data);
+        sort(leaderboardPage.plays.data);
       }
     }
   }, [props]);
-  //===========================================================================
+  //= ==========================================================================
+  async function sort(array) {
+    for (const i in array) {
+      array[i].score = array[i].totalScore + array[i].interviewScore;
+    }
+    const r = await _.reverse(_.sortBy(array, ['score'], ['desc']));
+    setRows(r);
+  }
   function handleChangePage(event, newPage) {
     setPage(newPage);
   }
@@ -68,7 +75,7 @@ export function LeaderboardPage(props) {
   function handleChangeSort() {
     setOrder(!order);
   }
-  //===========================================================================
+  //= ==========================================================================
   return (
     <>
       <Header />

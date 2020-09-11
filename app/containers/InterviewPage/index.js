@@ -53,9 +53,14 @@ export function InterviewPage(props) {
   const [usersDetail, setUserDetail] = useState();
   const [score, setScore] = useState();
   const [comment, setComment] = useState('');
+  function clear() {
+    setUserDetail();
+    setScore();
+    setComment();
+  }
   useEffect(() => {
     props.onGetUser();
-  }, []);
+  }, [usersDetail]);
   useEffect(() => {
     if (!localStorage.getItem('interviewer')) {
       const name = prompt('Nhập tên người phỏng vấn');
@@ -89,7 +94,7 @@ export function InterviewPage(props) {
           comment,
           interviewer: localStorage.getItem('interviewer'),
         });
-        props.onGetUser();
+        clear();
       }
       setUserDetail(null);
     } else {
@@ -100,45 +105,21 @@ export function InterviewPage(props) {
     <Grid container>
       <Grid item xs={4} style={{ padding: '10px', textAlign: 'center' }}>
         <Paper>
-          <Typography
-            variant="h4"
-            gutterBottom
-            style={{ padding: '15px 0px', marginBottom: '0px' }}
-          >
+          <Typography variant="h4" gutterBottom style={{ padding: '15px 0px', marginBottom: '0px' }}>
             THÔNG TIN SINH VIÊN
           </Typography>
           <Divider variant="middle" />
           <div className={classes.searchBox}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => props.onCall()}
-              style={{ margin: '0 20px 0 0' }}
-            >
-              Gọi SV
-            </Button>
-            <IconButton
-              style={{ margin: '0 20px 0 0', color: '#4CAF50' }}
-              onClick={() => props.onGetUser()}
-            >
+            <IconButton style={{ margin: '0 20px 0 0', color: '#4CAF50' }} onClick={() => props.onGetUser()}>
               <CachedIcon />
             </IconButton>
             <Autocomplete
               options={users}
-              getOptionLabel={option =>
-                option.userID ? option.userID.studentId : 'Mã Sinh Viên'
-              }
+              getOptionLabel={option => (option.userID ? option.userID.studentId : 'Mã Sinh Viên')}
               getOptionDisabled={option => option.isInterviewed === true}
               style={{ width: 300 }}
               onChange={handleChangeSearch}
-              renderInput={params => (
-                <TextField
-                  {...params}
-                  label="Mã Sinh Viên"
-                  variant="outlined"
-                  fullWidth
-                />
-              )}
+              renderInput={params => <TextField {...params} label="Mã Sinh Viên" variant="outlined" fullWidth />}
             />
           </div>
           <Divider variant="middle" />

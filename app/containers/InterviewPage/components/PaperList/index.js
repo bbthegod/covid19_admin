@@ -71,7 +71,7 @@ export function PaperList() {
           5. Anh chị trang trải học phí của mình bằng cách nào?
         </Typography>
         <Typography variant="h4" style={{ marginTop: 10 }}>
-          6. Anh chị có nhận xét gì về CLB, tổ chức cvux mà anh chị từng và đang
+          6. Anh chị có nhận xét gì về CLB, tổ chức cũ mà anh chị từng và đang
           tham gia? Những điểm mạnh và điểm yếu? Điều gì anh chị không thích và
           thích ở CLB, tổ chức cũ mà anh chị từng và đang tham gia?
         </Typography>

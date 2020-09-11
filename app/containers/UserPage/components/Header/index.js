@@ -10,11 +10,13 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
 import { Grid, Typography, Button } from '@material-ui/core';
+import DialogUser from '../../../../components/DialogUser';
 const useStyles = makeStyles(() => ({
   root: {},
 }));
 function Header(props) {
   const { className, ...rest } = props;
+  const [open, setOpen] = useState(false);
   const classes = useStyles();
   return (
     <div {...rest} className={clsx(classes.root, className)}>
@@ -32,11 +34,18 @@ function Header(props) {
             color="primary"
             variant="contained"
             disabled={localStorage.getItem('role') != 'admin'}
+            onClick={() => setOpen(true)}
           >
             Tạo Mới
           </Button>
         </Grid>
       </Grid>
+      <DialogUser
+        isEdit={false}
+        open={open}
+        setOpen={setOpen}
+        onCreate={props.onCreate}
+      />
     </div>
   );
 }

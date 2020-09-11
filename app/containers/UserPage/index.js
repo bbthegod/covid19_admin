@@ -18,14 +18,14 @@ import saga from './saga';
 import SearchBar from './components/SearchBar';
 import Header from './components/Header';
 import DataTable from './components/DataTable';
-import { getUser } from './actions';
+import { getUser, createUser } from './actions';
 export function UserPage(props) {
   const [page, setPage] = useState(0);
   const [count, setCount] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [rows, setRows] = useState();
   const [search, setSearch] = useState('');
-  const [role, setRole] = useState('user');
+  const [role, setRole] = useState();
   useInjectReducer({ key: 'userPage', reducer });
   useInjectSaga({ key: 'userPage', saga });
   //= ==========================================================================
@@ -35,7 +35,7 @@ export function UserPage(props) {
       skip: page * rowsPerPage,
       filter: {
         studentId: { $regex: search, $options: 'i' },
-        role: role == '' ? undefined : role,
+        role: role === '' ? undefined : role,
       },
     });
   }, [rowsPerPage, page, role, search]);
@@ -59,7 +59,7 @@ export function UserPage(props) {
   //= ==========================================================================
   return (
     <>
-      <Header />
+      <Header onCreate={props.onCreateUser} />
       <SearchBar
         search={search}
         setSearch={setSearch}
@@ -93,6 +93,7 @@ function mapDispatchToProps(dispatch) {
   return {
     dispatch,
     onGetUser: query => dispatch(getUser(query)),
+    onCreateUser: data => dispatch(createUser(data)),
   };
 }
 

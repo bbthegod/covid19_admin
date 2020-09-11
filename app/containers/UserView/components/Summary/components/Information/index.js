@@ -60,7 +60,7 @@ function Information(props) {
                   <TableCell>Lớp - Khoá</TableCell>
                   <TableCell>{student.class}</TableCell>
                 </TableRow>
-                <TableRow>
+                <TableRow selected>
                   <TableCell>Số Điện Thoại</TableCell>
                   <TableCell>{student.phone}</TableCell>
                 </TableRow>
@@ -68,9 +68,17 @@ function Information(props) {
                   <TableCell>Email</TableCell>
                   <TableCell>{student.email}</TableCell>
                 </TableRow>
+                <TableRow selected>
+                  <TableCell>Lớp</TableCell>
+                  <TableCell>{student.class}</TableCell>
+                </TableRow>
                 <TableRow>
                   <TableCell>Vị Trí</TableCell>
                   <TableCell>{student.role}</TableCell>
+                </TableRow>
+                <TableRow selected>
+                  <TableCell>Mật Khẩu</TableCell>
+                  <TableCell>{student.password}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>Trạng thái khoá</TableCell>
@@ -78,7 +86,7 @@ function Information(props) {
                     {student.isLocked ? 'Khoá' : 'Không Khoá'}
                   </TableCell>
                 </TableRow>
-                <TableRow>
+                <TableRow selected>
                   <TableCell>Trạng thái hoạt đông</TableCell>
                   <TableCell>
                     {student.isOnline ? 'Hoạt Động' : 'Không Hoạt Động'}
@@ -96,27 +104,13 @@ function Information(props) {
               <EditIcon className={classes.buttonIcon} />
               Sửa
             </Button>
-            <Button
-              style={{ marginLeft: 0 }}
-              onClick={() => setOpen(true)}
-              disabled={localStorage.getItem('role') != 'admin'}
-            >
-              <LockOpenIcon className={classes.buttonIcon} />
-              Khôi phục mật khẩu
-            </Button>
           </CardActions>
           <DialogUser
-            student={student}
-            onClose={() => setOpenEdit(!openEdit)}
+            row={student}
+            setOpen={setOpenEdit}
             open={openEdit}
-            isEdit={true ? 1 : 0}
-            handleEdit={onEditUser}
-          />
-          <ConfirmDialog
-            open={open}
-            setOpen={setOpen}
-            message="Đặt lại mật khẩu ?"
-            handleAction={() => onReset()}
+            isEdit
+            onEdit={onEditUser}
           />
         </>
       ) : null}

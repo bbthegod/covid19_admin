@@ -12,6 +12,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 import PersonIcon from '@material-ui/icons/Person';
 import ClassIcon from '@material-ui/icons/Class';
@@ -102,7 +103,7 @@ export function InterviewPage({
         <Grid container md={12}>
           <Grid item md={12}>
             <TextField
-              label="Tổng Điểm"
+              label="Tổng Điểm ( Tối đa 400đ )"
               variant="outlined"
               type="number"
               value={score}
